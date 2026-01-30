@@ -1,42 +1,66 @@
-# sv
+# yuruyaka-diary
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+書くことにプレッシャーをかけない、やさしい日記アプリ。  
+0文字でもOK。
 
-## Creating a project
+---
 
-If you're seeing this, you've probably already done this step. Congrats!
+## コンセプト
 
-```sh
-# create a new project
-npx sv create my-app
-```
+日記が続かない最大の理由は、「怠け」ではありません。
 
-To recreate this project with the same configuration:
+- 無意識に“ちゃんと書かなきゃ”と思ってしまうこと
+- 1日空いた瞬間に、心理的コストが一気に上がること
 
-```sh
-# recreate this project
-pnpm dlx sv create --template minimal --types ts --add prettier eslint tailwindcss="plugins:typography" --install pnpm ./
-```
+このアプリは、そうした負担を限りなく小さくするために作られています。
 
-## Developing
+設計思想はとてもシンプルです。
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- 書く量は0文字〜でいい
+- 雑でもいい
+- 1分で終わっていい
 
-```sh
-npm run dev
+**書かない日があっても、失敗にはなりません。**  
+ただ、そこに戻ってこられる場所を用意します。
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+---
 
-## Building
+## できること
 
-To create a production version of your app:
+- 1日1問のやさしい質問（回答は任意）
+- 自由記述欄（完全に任意）
+- 気分スライダーと簡単な行動チェック
+- 評価やスコアをしないダッシュボード表示
+- 書き忘れた前日を救済する「昨日の記録を書く」導線
 
-```sh
-npm run build
-```
+連続記録日数や数値による評価は、前面には出しません。  
+「続けさせる」のではなく、「戻ってきやすくする」ことを重視しています。
 
-You can preview the production build with `npm run preview`.
+---
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## 技術スタック
+
+- **Frontend**: Svelte / SvelteKit + TypeScript
+- **Backend / DB**: Supabase（PostgreSQL）
+- **Hosting**: Cloudflare Pages
+- **Styling**: Tailwind CSS
+
+---
+
+## プロジェクトの状態
+
+このリポジトリは、個人開発のMVPとして進行中です。
+
+将来的には以下のような機能拡張を想定しています。
+
+- 月次の感情ヒートマップ
+- 連続記録日数の可視化（評価にならない形で）
+- 複数端末対応・マルチユーザー対応（RLS）
+
+ただし、常に「気軽さ」を最優先に設計します。
+
+---
+
+## ライセンス
+
+MIT License
