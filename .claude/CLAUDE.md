@@ -361,13 +361,13 @@ const todayPrompt = prompts[dayIndex];
 </script>
 ```
 
-### 7.2 Store 設計（`src/lib/stores/`）
+### 7.2 Store 設計（`src/lib/stores/diary.ts`）
 
-`src/lib/stores/diary.ts` に以下の writable store を用意：
+`load` 関数から `+page.svelte` に渡せないページ横断的な状態のみ store に置く：
 
 ```typescript
 import { writable } from 'svelte/store';
-import type { Entry, Prompt, Response } from '$lib/types';
+import type { Entry, Prompt } from '$lib/types';
 
 export const currentEntry = writable<Entry | null>(null);
 export const todayPrompt = writable<Prompt | null>(null);
@@ -442,62 +442,40 @@ main           ← 本番相当。直接コミット禁止
 
 ```
 <type>(<scope>): <subject>
-
-[body - 任意]
 ```
-
-**type 一覧：**
 
 | type | 用途 |
 |---|---|
 | `feat` | 新機能 |
 | `fix` | バグ修正 |
-| `style` | UI・スタイルのみの変更（ロジック変更なし） |
-| `refactor` | リファクタリング（機能変化なし） |
+| `style` | UIスタイルのみの変更 |
+| `refactor` | リファクタリング |
 | `chore` | ビルド・設定・依存関係 |
 | `docs` | ドキュメントのみ |
-| `test` | テストの追加・修正 |
 
 **scope 例（省略可）：** `dashboard`, `record`, `ui`, `db`, `store`, `types`
 
-**subject のルール：**
-- 英語・動詞の原形で始める（日本語も可だが統一すること）
-- 末尾にピリオドをつけない
-- 50文字以内
+subject は英語・動詞の原形で始め、50文字以内、末尾ピリオドなし。
 
-**例：**
 ```
 feat(dashboard): add yesterday entry shortcut link
 fix(record): prevent entry creation on page load
-style(ui): adjust card padding to p-6
 chore: add supabase environment variables
 ```
 
 ### 9.4 コミットの粒度
 
-- **1コミット = 1つの論理的な変更**
-- `feat` と `fix` を同一コミットに混ぜない
-- UIコンポーネント実装は、コンポーネント単位でコミット
-  - ✅ `feat(ui): implement Button component`
-  - ✅ `feat(ui): implement MoodSlider component`
-  - ❌ `feat(ui): implement all components`
-- 動作確認前のWIP状態ではコミットしない（`--amend` や `stash` を使う）
+- **1コミット = 1つの論理的な変更**（`feat` と `fix` を混ぜない）
+- UI コンポーネントはコンポーネント単位でコミットする
+- WIP 状態ではコミットしない（`--amend` や `stash` を使う）
 
 ### 9.5 プルリクエスト（PR）規則
 
-**タイトル：** コミットメッセージと同じフォーマット
-```
-feat(dashboard): implement dashboard page
-```
-
-**本文テンプレート（`.github/pull_request_template.md` として配置）：**
+タイトルはコミットメッセージと同じフォーマット。本文テンプレート（`.github/pull_request_template.md`）：
 
 ```markdown
 ## 概要
 <!-- この PR で何をしたか、1〜3行で -->
-
-## 変更内容
-<!-- 変更したファイル・コンポーネントを箇条書きで -->
 
 ## 動作確認
 - [ ] ダッシュボードが正常に表示される
@@ -506,37 +484,26 @@ feat(dashboard): implement dashboard page
 - [ ] 過去日でも記録できる
 - [ ] 0文字でも保存できる
 - [ ] 昨日のエントリーがない場合のみサブ導線が表示される
-
-## スクリーンショット（任意）
-
-## 備考
-<!-- レビュアーへの補足、設計上の判断など -->
 ```
 
-**マージ先：** 原則 `develop`（`main` への直接 PR は禁止）
-
-**マージ方式：** Squash merge（develop → main のみ）またはMerge commit（feature → develop）
+マージ先は `develop`。`main` への直接 PR 禁止。`develop → main` のみ Squash merge。
 
 ### 9.6 チェック方法
 
 **コミット前（毎回）：**
 
 ```bash
-pnpm run format   # Prettier で自動整形。コミット前に必ず実行する
-pnpm run lint     # Prettier チェック + ESLint。警告・エラーが0件になるまで修正する
-pnpm run check    # svelte-check + TypeScript 型検査。エラーが0件になるまで修正する
+pnpm format   # Prettier で自動整形。必ず lint より先に実行する
+pnpm lint     # Prettier チェック + ESLint
+pnpm check    # svelte-check + TypeScript 型検査
 ```
 
 **PR 作成前（追加で）：**
 
 ```bash
-pnpm run build    # 本番ビルドが通ることを確認（型エラー・import 漏れの最終チェック）
-pnpm run dev      # ローカルで実際の動作を目視確認する
+pnpm build    # 本番ビルドが通ることを確認
+pnpm dev      # ローカルで実際の動作を目視確認
 ```
-
-> `pnpm run format` を先に実行してから `pnpm run lint` を実行すること。逆順だと整形前のコードに対して lint が走り、修正が無駄になる。
-
-CI を設定する場合は GitHub Actions で `lint` → `check` → `build` の順に自動化してください（`.github/workflows/ci.yml`）。
 
 ---
 
@@ -598,29 +565,17 @@ export const load: PageLoad = async ({ params }) => {
 };
 ```
 
-```svelte
-<!-- src/routes/record/[date]/+page.svelte -->
-<script lang="ts">
-  import type { PageData } from './$types';
-  export let data: PageData;
-  // data.date, data.entry, data.prompts, data.responses を使う
-</script>
-```
-
-ダッシュボード（`/`）も同様に `src/routes/+page.ts` を作成し、`load` 関数で今日・昨日のエントリー有無と過去7日分のデータを取得する。
+ダッシュボード（`/`）も同様に `src/routes/+page.ts` を作成し、`load` 関数で今日・昨日のエントリー有無と過去7日分のデータを取得する。`+page.svelte` では `export let data: PageData` で受け取る。
 
 ---
 
 ## 11. コーディング規約
 
-- **コンポーネントファイル**: PascalCase（`MoodSlider.svelte`）
-- **その他 `.ts` ファイル**: camelCase（`entries.ts`）
-- **型定義**: `interface` を優先（`type` は union 型など必要な場面のみ）
-- **`any` 型の使用禁止**: 型不明な場合は `unknown` を使い、必要に応じてガードを書く
-- **Svelte の双方向バインディング**: `bind:value` を積極的に使用してよい
-- **`$:` リアクティブ宣言**: 派生値の計算に使用、副作用（API呼び出し）には `onMount` か `$effect` を使う
-- **エラーハンドリング**: Supabase の呼び出しは必ず `try/catch` でラップし、ユーザーに通知する（ただし過剰なエラー画面は作らない）
-- **環境変数**: `.env` に `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` を定義し、`$env/static/public` からインポートする
+- ファイル名: コンポーネントは PascalCase（`MoodSlider.svelte`）、それ以外は camelCase（`entries.ts`）
+- 型定義: `interface` を優先。`any` 禁止、型不明なら `unknown` を使う
+- Svelte: `bind:value` を積極的に使用してよい。`$:` は派生値の計算に使い、API 呼び出し等の副作用は `onMount` で行う
+- エラーハンドリング: Supabase 呼び出しは `try/catch` でラップし、失敗をユーザーに伝える（過剰なエラー画面は不要）
+- 環境変数: `.env` に `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY` を定義し `$env/static/public` からインポート
 
 ---
 
@@ -651,4 +606,4 @@ export const load: PageLoad = async ({ params }) => {
 
 ---
 
-*最終更新: 2026-03-27 (v3 — チェックスクリプトを定義済みコマンドに更新)*
+*最終更新: 2026-03-27 (v4 — pnpm化・個人開発向けにスリム化)*
