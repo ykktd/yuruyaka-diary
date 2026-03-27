@@ -39,7 +39,9 @@
 	{#if data.todayEntry}
 		<div class="rounded-2xl bg-slate-100/80 p-8 text-center">
 			<div class="mb-4 flex justify-center">
-				<div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-400">
+				<div
+					class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-400"
+				>
 					<PenLine size={28} />
 				</div>
 			</div>
@@ -54,11 +56,11 @@
 		</div>
 	{:else}
 		<div class="rounded-2xl border border-slate-100 bg-white p-8 text-center shadow-sm">
-			<p class="mb-1 text-lg font-bold text-slate-800">今日の記録</p>
+			<p class="mb-1 text-2xl font-bold text-slate-600">今日の記録</p>
 			<p class="mb-6 text-sm text-slate-400">0文字でも、気分だけでもOK。</p>
 			<a
 				href={`/record/${data.today}`}
-				class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-5 text-base font-medium text-white shadow-lg shadow-brand-200/50 transition-colors hover:bg-brand-600"
+				class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-5 text-lg font-medium text-white shadow-lg shadow-brand-200/50 transition-colors hover:bg-brand-600"
 			>
 				<Plus size={20} />
 				今日を記録する
@@ -90,11 +92,7 @@
 					<span
 						class={[
 							'text-sm font-medium',
-							isToday
-								? 'text-brand-500'
-								: hasEntry
-									? 'text-brand-300'
-									: 'text-slate-300'
+							isToday ? 'text-brand-500' : hasEntry ? 'text-brand-300' : 'text-slate-300'
 						].join(' ')}
 					>
 						{WEEK_DAYS[d.getDay()]}
@@ -112,11 +110,17 @@
 			<Home size={22} />
 			<span class="text-xs font-medium">ホーム</span>
 		</a>
-		<a href="/entries" class="flex flex-1 flex-col items-center gap-1 py-3 text-slate-400 transition-colors hover:text-slate-600">
+		<a
+			href="/entries"
+			class="flex flex-1 flex-col items-center gap-1 py-3 text-slate-400 transition-colors hover:text-slate-600"
+		>
 			<BookOpen size={22} />
 			<span class="text-xs font-medium">これまでの記録</span>
 		</a>
-		<a href="/settings" class="flex flex-1 flex-col items-center gap-1 py-3 text-slate-400 transition-colors hover:text-slate-600">
+		<a
+			href="/settings"
+			class="flex flex-1 flex-col items-center gap-1 py-3 text-slate-400 transition-colors hover:text-slate-600"
+		>
 			<Settings size={22} />
 			<span class="text-xs font-medium">設定</span>
 		</a>
