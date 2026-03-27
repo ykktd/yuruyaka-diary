@@ -7,6 +7,11 @@
 </script>
 
 <div class="space-y-2">
+	<div class="flex justify-between text-xs text-slate-400">
+		<span>Bad</span>
+		<span>Neutral</span>
+		<span>Good</span>
+	</div>
 	<input
 		type="range"
 		min="0"
@@ -14,9 +19,4 @@
 		bind:value
 		class="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-brand-500"
 	/>
-	<div class="flex justify-between text-xs text-slate-400">
-		<span>Bad</span>
-		<span>Neutral</span>
-		<span>Good</span>
-	</div>
 </div>
