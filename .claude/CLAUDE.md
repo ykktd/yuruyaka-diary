@@ -20,13 +20,13 @@
 
 ## 1. 技術スタック
 
-| レイヤー | 技術 | 備考 |
-|---|---|---|
-| Frontend | SvelteKit + TypeScript | `.svelte` + `.ts` ファイルで構成 |
-| スタイル | Tailwind CSS v3 | カスタムカラーあり（後述） |
-| Backend / DB | Supabase (PostgreSQL) | MVP では RLS を有効化しない |
-| Hosting | Cloudflare Pages | |
-| アイコン | lucide-svelte | |
+| レイヤー     | 技術                   | 備考                             |
+| ------------ | ---------------------- | -------------------------------- |
+| Frontend     | SvelteKit + TypeScript | `.svelte` + `.ts` ファイルで構成 |
+| スタイル     | Tailwind CSS v3        | カスタムカラーあり（後述）       |
+| Backend / DB | Supabase (PostgreSQL)  | MVP では RLS を有効化しない      |
+| Hosting      | Cloudflare Pages       |                                  |
+| アイコン     | lucide-svelte          |                                  |
 
 > **注意**: 企画書内のモックアップコードは React/TSX で書かれていますが、実装は **Svelte/SvelteKit + TypeScript** です。React のコードは UI・ロジックの参考にとどめ、そのままコピーしないでください。
 
@@ -66,6 +66,7 @@ src/
 ### 3.1 テーブル定義
 
 #### `entries`（1日1レコード）
+
 ```sql
 CREATE TABLE entries (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -81,6 +82,7 @@ CREATE TABLE entries (
 ```
 
 #### `prompts`（質問マスター）
+
 ```sql
 CREATE TABLE prompts (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -92,6 +94,7 @@ CREATE TABLE prompts (
 ```
 
 #### `responses`（ユーザーの記述）
+
 ```sql
 CREATE TABLE responses (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -120,37 +123,37 @@ CREATE TABLE responses (
 
 ```typescript
 export interface Entry {
-  id: string;
-  // user_id は MVP では存在しない
-  date: string; // ISO 8601: "YYYY-MM-DD"
-  mood: number; // 0-100
-  sleptWell: boolean;
-  busy: boolean;
-  wentOut: boolean;
-  createdAt: string;
-  updatedAt: string;
+	id: string;
+	// user_id は MVP では存在しない
+	date: string; // ISO 8601: "YYYY-MM-DD"
+	mood: number; // 0-100
+	sleptWell: boolean;
+	busy: boolean;
+	wentOut: boolean;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface Prompt {
-  id: string;
-  type: 'daily_question' | 'free_note';
-  text: string;
-  isActive: boolean;
-  createdAt: string;
+	id: string;
+	type: 'daily_question' | 'free_note';
+	text: string;
+	isActive: boolean;
+	createdAt: string;
 }
 
 export interface DiaryResponse {
-  id: string;
-  entryId: string;
-  promptId: string;
-  content: string;
-  createdAt: string;
+	id: string;
+	entryId: string;
+	promptId: string;
+	content: string;
+	createdAt: string;
 }
 
 // 記録画面で扱う集約型
 export interface EntryWithResponses {
-  entry: Entry;
-  responses: DiaryResponse[];
+	entry: Entry;
+	responses: DiaryResponse[];
 }
 ```
 
@@ -166,52 +169,52 @@ export interface EntryWithResponses {
 import type { Config } from 'tailwindcss';
 
 export default {
-  content: ['./src/**/*.{html,js,svelte,ts}'],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['"Zen Maru Gothic"', 'sans-serif'],
-      },
-      colors: {
-        brand: {
-          50:  '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',  // メインアクション・アクセント
-          600: '#0284c7',  // ホバー
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-        },
-      },
-    },
-  },
+	content: ['./src/**/*.{html,js,svelte,ts}'],
+	theme: {
+		extend: {
+			fontFamily: {
+				sans: ['"Zen Maru Gothic"', 'sans-serif']
+			},
+			colors: {
+				brand: {
+					50: '#f0f9ff',
+					100: '#e0f2fe',
+					200: '#bae6fd',
+					300: '#7dd3fc',
+					400: '#38bdf8',
+					500: '#0ea5e9', // メインアクション・アクセント
+					600: '#0284c7', // ホバー
+					700: '#0369a1',
+					800: '#075985',
+					900: '#0c4a6e'
+				}
+			}
+		}
+	}
 } satisfies Config;
 ```
 
 ### 5.2 カラー使用ルール
 
-| 用途 | クラス |
-|---|---|
-| アプリ背景 | `bg-slate-50` |
-| カード背景 | `bg-white` |
-| メインテキスト（日付など） | `text-slate-800` |
-| 本文・入力テキスト | `text-slate-600` |
-| 補足・ラベル | `text-slate-400` |
-| プレースホルダー | `text-slate-300` |
-| メインボタン | `bg-brand-500 hover:bg-brand-600` |
-| ボタンの影 | `shadow-lg shadow-brand-200/50` |
+| 用途                       | クラス                            |
+| -------------------------- | --------------------------------- |
+| アプリ背景                 | `bg-slate-50`                     |
+| カード背景                 | `bg-white`                        |
+| メインテキスト（日付など） | `text-slate-800`                  |
+| 本文・入力テキスト         | `text-slate-600`                  |
+| 補足・ラベル               | `text-slate-400`                  |
+| プレースホルダー           | `text-slate-300`                  |
+| メインボタン               | `bg-brand-500 hover:bg-brand-600` |
+| ボタンの影                 | `shadow-lg shadow-brand-200/50`   |
 
 ### 5.3 形状ルール
 
-| 要素 | クラス |
-|---|---|
-| カード・コンテナ | `rounded-2xl` |
-| ボタン | `rounded-xl` |
-| 入力フォーム | `rounded-lg` |
-| カードの影 | `shadow-sm border border-slate-100` |
+| 要素             | クラス                              |
+| ---------------- | ----------------------------------- |
+| カード・コンテナ | `rounded-2xl`                       |
+| ボタン           | `rounded-xl`                        |
+| 入力フォーム     | `rounded-lg`                        |
+| カードの影       | `shadow-sm border border-slate-100` |
 
 ### 5.4 余白ルール
 
@@ -225,8 +228,8 @@ Google Fonts の `Zen Maru Gothic` を `app.html` の `<head>` で読み込む�
 
 ```html
 <link
-  href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap"
-  rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap"
+	rel="stylesheet"
 />
 ```
 
@@ -241,14 +244,14 @@ Google Fonts の `Zen Maru Gothic` を `app.html` の `<head>` で読み込む�
 @tailwind utilities;
 
 body {
-  background-color: #f8fafc; /* slate-50 */
+	background-color: #f8fafc; /* slate-50 */
 }
 ```
 
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-  import '../app.css';
+	import '../app.css';
 </script>
 
 <slot />
@@ -261,6 +264,7 @@ body {
 ### 6.1 ダッシュボード（`/`）
 
 **表示要素：**
+
 1. 今日の日付（例：2026年3月27日 木曜日）
 2. メインCTAボタン
    - 今日のエントリー未作成 → `「今日を記録する」`（brand-500）
@@ -270,11 +274,13 @@ body {
    - ボタン押下時は `/record/YYYY-MM-DD` へ遷移するだけ。DB操作は行わない
 
 **禁止事項：**
+
 - 連続記録日数などの数値表示
 - 「未記録」「空白」などの否定的表現
 - 記録がない日をグレーアウトして強調するような演出
 
 **グラフ（過去7日分の記録有無）：**
+
 - 記録あり: `bg-brand-400`
 - 記録なし: `bg-slate-200`
 - 数値・グリッド線は表示しない
@@ -307,10 +313,12 @@ body {
    - 保存後は必ずダッシュボード（`/`）に戻る
 
 **過去日のアクセス範囲：**
+
 - URL を直打ちすれば任意の過去日にアクセスできる。これは**意図的な仕様**であり、制限しない
 - 未来日（今日より後の日付）へのアクセスは `/` にリダイレクトする
 
 **質問の選択ロジック：**
+
 ```typescript
 // 日付から決定論的に質問を選ぶ（日が変わるまで同じ質問が出る）
 const dayIndex = new Date(dateStr).getDate() % prompts.length;
@@ -326,38 +334,42 @@ const todayPrompt = prompts[dayIndex];
 以下を独立したコンポーネントとして実装してください：
 
 **`Button.svelte`**
+
 ```svelte
 <script lang="ts">
-  export let variant: 'primary' | 'secondary' | 'ghost' = 'primary';
-  export let fullWidth = false;
-  export let disabled = false;
+	export let variant: 'primary' | 'secondary' | 'ghost' = 'primary';
+	export let fullWidth = false;
+	export let disabled = false;
 </script>
 ```
 
 **`Card.svelte`**
+
 ```svelte
 <script lang="ts">
-  export let clickable = false;
+	export let clickable = false;
 </script>
 ```
 
 **`CheckboxChip.svelte`**
+
 ```svelte
 <script lang="ts">
-  import type { ComponentType } from 'svelte';
-  export let label: string;
-  export let checked = false;
-  // lucide-svelte のコンポーネントを直接渡す。文字列は不可。
-  // 呼び出し側: <CheckboxChip icon={Moon} ... />
-  // テンプレート内: <svelte:component this={icon} size={18} />
-  export let icon: ComponentType | undefined = undefined;
+	import type { ComponentType } from 'svelte';
+	export let label: string;
+	export let checked = false;
+	// lucide-svelte のコンポーネントを直接渡す。文字列は不可。
+	// 呼び出し側: <CheckboxChip icon={Moon} ... />
+	// テンプレート内: <svelte:component this={icon} size={18} />
+	export let icon: ComponentType | undefined = undefined;
 </script>
 ```
 
 **`MoodSlider.svelte`**
+
 ```svelte
 <script lang="ts">
-  export let value = 50;
+	export let value = 50;
 </script>
 ```
 
@@ -381,32 +393,32 @@ export const todayPrompt = writable<Prompt | null>(null);
 
 ```typescript
 // エントリーを日付で取得（なければ null を返す）
-export async function getEntryByDate(date: string): Promise<Entry | null>
+export async function getEntryByDate(date: string): Promise<Entry | null>;
 
 // エントリーを新規作成または更新（upsert）
 // date カラムに UNIQUE 制約があるため ON CONFLICT で更新する
 export async function upsertEntry(
-  entry: Omit<Entry, 'id' | 'createdAt' | 'updatedAt'>
-): Promise<Entry>
+	entry: Omit<Entry, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<Entry>;
 
 // 過去N日分の記録済み日付一覧を取得（ダッシュボードのグラフ用）
-export async function getRecentEntryDates(days: number): Promise<string[]>
+export async function getRecentEntryDates(days: number): Promise<string[]>;
 ```
 
 `src/lib/services/responses.ts` の責務：
 
 ```typescript
 // entry_id に紐づく全 response を取得
-export async function getResponsesByEntryId(entryId: string): Promise<DiaryResponse[]>
+export async function getResponsesByEntryId(entryId: string): Promise<DiaryResponse[]>;
 
 // response を新規作成または内容を更新（upsert）
 // responses テーブルの UNIQUE (entry_id, prompt_id) 制約を前提とする
 // content が空文字のときも保存する（0文字OK の設計思想）
 export async function upsertResponse(
-  entryId: string,
-  promptId: string,
-  content: string
-): Promise<DiaryResponse>
+	entryId: string,
+	promptId: string,
+	content: string
+): Promise<DiaryResponse>;
 ```
 
 > **Supabase の upsert 構文メモ**: `supabase.from('responses').upsert({ entry_id, prompt_id, content }, { onConflict: 'entry_id,prompt_id' })`
@@ -427,12 +439,12 @@ main           ← 本番相当。直接コミット禁止
 
 ### 9.2 ブランチ命名規則
 
-| プレフィックス | 用途 | 例 |
-|---|---|---|
-| `feature/` | 新機能 | `feature/dashboard-ui` |
-| `fix/` | バグ修正 | `fix/entry-not-saved` |
-| `chore/` | 環境・設定・リファクタ | `chore/setup-supabase` |
-| `docs/` | ドキュメント変更のみ | `docs/update-readme` |
+| プレフィックス | 用途                   | 例                     |
+| -------------- | ---------------------- | ---------------------- |
+| `feature/`     | 新機能                 | `feature/dashboard-ui` |
+| `fix/`         | バグ修正               | `fix/entry-not-saved`  |
+| `chore/`       | 環境・設定・リファクタ | `chore/setup-supabase` |
+| `docs/`        | ドキュメント変更のみ   | `docs/update-readme`   |
 
 - **ケバブケース** で書く（スペース・アンダースコア禁止）
 - 日本語禁止
@@ -444,14 +456,14 @@ main           ← 本番相当。直接コミット禁止
 <type>(<scope>): <subject>
 ```
 
-| type | 用途 |
-|---|---|
-| `feat` | 新機能 |
-| `fix` | バグ修正 |
-| `style` | UIスタイルのみの変更 |
-| `refactor` | リファクタリング |
-| `chore` | ビルド・設定・依存関係 |
-| `docs` | ドキュメントのみ |
+| type       | 用途                   |
+| ---------- | ---------------------- |
+| `feat`     | 新機能                 |
+| `fix`      | バグ修正               |
+| `style`    | UIスタイルのみの変更   |
+| `refactor` | リファクタリング       |
+| `chore`    | ビルド・設定・依存関係 |
+| `docs`     | ドキュメントのみ       |
 
 **scope 例（省略可）：** `dashboard`, `record`, `ui`, `db`, `store`, `types`
 
@@ -475,9 +487,11 @@ chore: add supabase environment variables
 
 ```markdown
 ## 概要
+
 <!-- この PR で何をしたか、1〜3行で -->
 
 ## 動作確認
+
 - [ ] ダッシュボードが正常に表示される
 - [ ] 記録画面への遷移が正常
 - [ ] 保存後にダッシュボードへ戻る
@@ -546,22 +560,22 @@ import { getResponsesByEntryId } from '$lib/services/responses';
 import { getActivePrompts } from '$lib/services/prompts';
 
 export const load: PageLoad = async ({ params }) => {
-  const { date } = params;
+	const { date } = params;
 
-  // 未来日はダッシュボードへリダイレクト
-  if (date > new Date().toISOString().split('T')[0]) {
-    throw redirect(302, '/');
-  }
+	// 未来日はダッシュボードへリダイレクト
+	if (date > new Date().toISOString().split('T')[0]) {
+		throw redirect(302, '/');
+	}
 
-  const [entry, prompts] = await Promise.all([
-    getEntryByDate(date),
-    getActivePrompts('daily_question'),
-  ]);
+	const [entry, prompts] = await Promise.all([
+		getEntryByDate(date),
+		getActivePrompts('daily_question')
+	]);
 
-  // 既存エントリーがある場合のみ responses を取得
-  const responses = entry ? await getResponsesByEntryId(entry.id) : [];
+	// 既存エントリーがある場合のみ responses を取得
+	const responses = entry ? await getResponsesByEntryId(entry.id) : [];
 
-  return { date, entry, prompts, responses };
+	return { date, entry, prompts, responses };
 };
 ```
 
@@ -595,15 +609,15 @@ export const load: PageLoad = async ({ params }) => {
 
 ## 13. 禁止事項まとめ
 
-| 禁止 | 理由 |
-|---|---|
-| 連続記録日数の表示 | 評価・競争につながる |
-| 「未記録」「空白」「サボった」などの文言 | 設計思想に反する |
-| ページ表示でのエントリー自動生成 | 行為ベース設計の原則 |
-| React / JSX の混入 | 技術スタックが異なる |
-| `main` への直接コミット | ブランチ戦略違反 |
-| `any` 型の使用 | 型安全性の確保 |
+| 禁止                                     | 理由                 |
+| ---------------------------------------- | -------------------- |
+| 連続記録日数の表示                       | 評価・競争につながる |
+| 「未記録」「空白」「サボった」などの文言 | 設計思想に反する     |
+| ページ表示でのエントリー自動生成         | 行為ベース設計の原則 |
+| React / JSX の混入                       | 技術スタックが異なる |
+| `main` への直接コミット                  | ブランチ戦略違反     |
+| `any` 型の使用                           | 型安全性の確保       |
 
 ---
 
-*最終更新: 2026-03-27 (v4 — pnpm化・個人開発向けにスリム化)*
+_最終更新: 2026-03-27 (v4 — pnpm化・個人開発向けにスリム化)_
