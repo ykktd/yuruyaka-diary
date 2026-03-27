@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { WEEK_DAYS } from '$lib/constants';
-	import { Plus, Home, BookOpen, Settings, PenLine } from 'lucide-svelte';
+	import { Plus, PenLine } from 'lucide-svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -102,27 +102,3 @@
 		</div>
 	</div>
 </main>
-
-<!-- ボトムナビゲーション -->
-<nav class="fixed right-0 bottom-0 left-0 border-t border-slate-100 bg-white">
-	<div class="mx-auto flex max-w-md">
-		<a href="/" class="flex flex-1 flex-col items-center gap-1 py-3 text-brand-500">
-			<Home size={22} />
-			<span class="text-xs font-medium">ホーム</span>
-		</a>
-		<a
-			href="/entries"
-			class="flex flex-1 flex-col items-center gap-1 py-3 text-slate-400 transition-colors hover:text-slate-600"
-		>
-			<BookOpen size={22} />
-			<span class="text-xs font-medium">これまでの記録</span>
-		</a>
-		<a
-			href="/settings"
-			class="flex flex-1 flex-col items-center gap-1 py-3 text-slate-400 transition-colors hover:text-slate-600"
-		>
-			<Settings size={22} />
-			<span class="text-xs font-medium">設定</span>
-		</a>
-	</div>
-</nav>
