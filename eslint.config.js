@@ -22,7 +22,11 @@ export default defineConfig(
 		rules: {
 			// typescript-eslint strongly recommend that you do not use the no-undef lint rule on TypeScript projects.
 			// see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
-			'no-undef': 'off'
+			'no-undef': 'off',
+			// SvelteDate is for mutable reactive dates; temporary Date instances for formatting don't need it
+			'svelte/prefer-svelte-reactivity': 'off',
+			// Simple string-based navigation is sufficient for this app
+			'svelte/no-navigation-without-resolve': 'off'
 		}
 	},
 	{
