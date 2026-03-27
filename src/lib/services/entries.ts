@@ -41,6 +41,11 @@ export async function getEntryByDate(date: string): Promise<Entry | null> {
 export async function upsertEntry(
 	entry: Omit<Entry, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<Entry> {
+	const {
+		data: { user }
+	} = await supabase.auth.getUser();
+	if (!user) throw new Error('Not authenticated');
+
 	const { data, error } = await supabase
 		.from('entries')
 		.upsert(
@@ -50,14 +55,29 @@ export async function upsertEntry(
 				slept_well: entry.sleptWell,
 				busy: entry.busy,
 				went_out: entry.wentOut,
+				user_id: user.id,
 				updated_at: new Date().toISOString()
 			},
-			{ onConflict: 'date' }
+			{ onConflict: 'user_id,date' }
 		)
 		.select('id, date, mood, slept_well, busy, went_out, created_at, updated_at')
 		.single();
 	if (error) throw error;
 	return toEntry(data);
+}
+
+export async function getAllEntries(): Promise<Entry[]> {
+	try {
+		const { data, error } = await supabase
+			.from('entries')
+			.select('id, date, mood, slept_well, busy, went_out, created_at, updated_at')
+			.order('date', { ascending: false });
+		if (error) throw error;
+		return (data ?? []).map(toEntry);
+	} catch (e) {
+		console.error('getAllEntries error:', e);
+		return [];
+	}
 }
 
 export async function getRecentEntryDates(days: number): Promise<string[]> {

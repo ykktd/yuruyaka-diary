@@ -36,10 +36,15 @@ export async function upsertResponse(
 	promptId: string,
 	content: string
 ): Promise<DiaryResponse> {
+	const {
+		data: { user }
+	} = await supabase.auth.getUser();
+	if (!user) throw new Error('Not authenticated');
+
 	const { data, error } = await supabase
 		.from('question_answers')
 		.upsert(
-			{ entry_id: entryId, question_id: promptId, answer_text: content },
+			{ entry_id: entryId, question_id: promptId, answer_text: content, user_id: user.id },
 			{ onConflict: 'entry_id,question_id' }
 		)
 		.select('id, entry_id, question_id, answer_text, created_at')

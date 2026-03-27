@@ -28,7 +28,7 @@ export type Database = {
 					mood: number;
 					slept_well?: boolean;
 					updated_at?: string | null;
-					user_id?: string; // optional for MVP without auth
+					user_id?: string;
 					went_out?: boolean;
 				};
 				Update: {
@@ -52,6 +52,7 @@ export type Database = {
 					id: string;
 					question_id: string;
 					updated_at: string | null;
+					user_id: string | null;
 				};
 				Insert: {
 					answer_text?: string | null;
@@ -60,6 +61,7 @@ export type Database = {
 					id?: string;
 					question_id: string;
 					updated_at?: string | null;
+					user_id?: string | null;
 				};
 				Update: {
 					answer_text?: string | null;
@@ -68,6 +70,7 @@ export type Database = {
 					id?: string;
 					question_id?: string;
 					updated_at?: string | null;
+					user_id?: string | null;
 				};
 				Relationships: [
 					{
@@ -241,7 +244,7 @@ export type CompositeTypes<
 }
 	? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
 	: PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
-		? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+		? DefaultSchema['Tables'][PublicCompositeTypeNameOrOptions]
 		: never;
 
 export const Constants = {
