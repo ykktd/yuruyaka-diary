@@ -4,5 +4,6 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/stati
 
 export const supabase = createClient<Database>(
 	PUBLIC_SUPABASE_URL,
-	PUBLIC_SUPABASE_PUBLISHABLE_KEY
+	PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+	{ auth: { detectSessionInUrl: false } }
 );
