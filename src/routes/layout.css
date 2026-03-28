@@ -18,13 +18,3 @@
 body {
 	background-color: #f8fafc;
 }
-
-/* Prevent iOS Safari zoom on input focus (zoom is triggered when font-size < 16px) */
-/* スマホ入力時の画面拡大防止：iOSではfont-sizeが16px未満の入力欄でズームが発生するため */
-@media (hover: none) and (pointer: coarse) {
-	input,
-	textarea,
-	select {
-		font-size: 16px;
-	}
-}
